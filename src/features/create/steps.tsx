@@ -10,7 +10,7 @@ import { OnSun, Radius, Spacing } from '@/constants/theme';
 import { useIsWide, useTheme } from '@/hooks/use-theme';
 import { BRUSH_SIZES, CRAYONS, KIND_ORDER, KINDS, MOODS, PALETTES, STYLES, styleName } from '@/world/catalog';
 import { questionsFor } from '@/world/questions';
-import { useCreation, useWorld } from '@/world/store';
+import { useChildWorld, useCreation, useWorld } from '@/world/store';
 import type { ArtStyleId, MoodId } from '@/world/types';
 
 import type { Draft, useCreateFlow } from './use-create-flow';
@@ -248,7 +248,7 @@ export function SavedStep({ flow, draft }: { flow: Flow; draft: Draft }) {
   const t = useTheme();
   const wide = useIsWide();
   const creation = useCreation(draft.savedId ?? undefined);
-  const folders = useWorld((s) => s.folders);
+  const { folders } = useChildWorld();
   const updateCreation = useWorld((s) => s.updateCreation);
   if (!creation) return null;
   return (

@@ -4,23 +4,27 @@ import { router } from 'expo-router';
 
 import { ArtView } from '@/components/art-view';
 import { PageArt } from '@/components/page-art';
-import { ParentGate } from '@/components/parent-gate';
-import { Body, Button, Chip, Empty, Field, Panel, Row, Screen, Title } from '@/components/ui';
+import { PinGate } from '@/components/pin-gate';
+import { Body, Button, Chip, Empty, Field, Meter, Panel, Row, Screen, Title } from '@/components/ui';
 import { Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { ai } from '@/services/ai';
 import { STYLES, THEMES } from '@/world/catalog';
-import { useWorld } from '@/world/store';
+import { useChildWorld, useWorld } from '@/world/store';
 import type { ArtStyleId, Book, StoryThemeId } from '@/world/types';
 
 export default function StoryTimeScreen() {
   const unlocked = useWorld((s) => s.parentUnlocked);
-  return <Screen>{unlocked ? <StoryTime /> : <ParentGate />}</Screen>;
+  return <Screen>{unlocked ? <StoryTime /> : <PinGate />}</Screen>;
 }
 
 function StoryTime() {
   const t = useTheme();
-  const { childName, creations, credits, setParentUnlocked, addBook } = useWorld();
+  const { child, creations } = useChildWorld();
+  const childName = child?.name ?? '';
+  const credits = useWorld((s) => s.credits);
+  const setParentUnlocked = useWorld((s) => s.setParentUnlocked);
+  const addBook = useWorld((s) => s.addBook);
   const [cast, setCast] = useState<string[]>([]);
   const [theme, setTheme] = useState<StoryThemeId>('bravery');
   const [moment, setMoment] = useState('');
@@ -35,7 +39,8 @@ function StoryTime() {
     setDrafting(true);
     try {
       const mood = chosen.find((c) => c.kind !== 'place')?.mood ?? chosen[0]?.mood ?? 'bright';
-      setDraft(await ai.draftBook({ cast: chosen, theme, moment, style, mood }));
+      if (!child) return;
+      setDraft(await ai.draftBook({ childId: child.id, cast: chosen, theme, moment, style, mood }));
     } finally {
       setDrafting(false);
     }
@@ -158,25 +163,8 @@ function StoryTime() {
   );
 }
 
-function Meter({ left, total, label }: { left: number; total: number; label: string }) {
-  const t = useTheme();
-  return (
-    <View style={styles.meter}>
-      <View style={[styles.track, { backgroundColor: t.line }]}>
-        <View style={{ width: `${Math.round((left / Math.max(total, 1)) * 100)}%`, height: '100%', backgroundColor: t.leaf }} />
-      </View>
-      <Text style={[styles.meterText, { color: t.text }]}>
-        {left} of {total} {label} left
-      </Text>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   label: { fontSize: 15, fontWeight: '800' },
-  meter: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, flexGrow: 1 },
-  track: { flexGrow: 1, minWidth: 80, height: 10, borderRadius: 99, overflow: 'hidden' },
-  meterText: { fontSize: 14, fontWeight: '700', fontVariant: ['tabular-nums'] },
   cast: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.three },
   castCard: { width: 130, padding: 6, gap: 4, borderRadius: Radius.medium, borderWidth: 3 },
   castName: { fontSize: 14, fontWeight: '800' },

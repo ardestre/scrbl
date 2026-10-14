@@ -14,9 +14,24 @@ export type ArtStyleId = 'storybook' | 'cartoon' | 'watercolor' | 'clay' | 'comi
 
 export type MoodId = 'bright' | 'pastel' | 'sunny' | 'night';
 
+/** A built-in character icon a kid can pick for their profile. */
+export type AvatarId = 'blob' | 'dragon' | 'robot' | 'cat' | 'alien' | 'bunny' | 'dino' | 'owl';
+
+/** A kid using SCRBL. Each kid has their own world: drawings, folders and books. */
+export type Profile = {
+  id: string;
+  name: string;
+  avatar: AvatarId;
+  /** One of the kid's own drawings used as their icon instead of a built-in one. */
+  avatarCreationId?: string;
+  createdAt: number;
+};
+
 /** Something the kid drew: the original sketch plus the art made from it. */
 export type Creation = {
   id: string;
+  /** The kid who drew it. */
+  childId: string;
   kind: CreationKind;
   name: string;
   /** The kid's answers to the helper's questions, such as what the character loves. */
@@ -35,6 +50,7 @@ export type Creation = {
 
 export type Folder = {
   id: string;
+  childId: string;
   name: string;
   createdAt: number;
 };
@@ -47,6 +63,8 @@ export type BookPage = {
 
 export type Book = {
   id: string;
+  /** The kid whose world the book is set in. */
+  childId: string;
   title: string;
   theme: StoryThemeId;
   style: ArtStyleId;

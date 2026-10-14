@@ -15,8 +15,10 @@ export default function CreationScreen() {
   const wide = useIsWide();
   const { id } = useLocalSearchParams<{ id: string }>();
   const creation = useCreation(id);
-  const folders = useWorld((s) => s.folders);
+  const allFolders = useWorld((s) => s.folders);
   const books = useWorld((s) => s.books);
+  const owner = useWorld((s) => s.profiles.find((p) => p.id === creation?.childId));
+  const folders = allFolders.filter((f) => f.childId === creation?.childId);
   const updateCreation = useWorld((s) => s.updateCreation);
   const deleteCreation = useWorld((s) => s.deleteCreation);
   const parentUnlocked = useWorld((s) => s.parentUnlocked);
@@ -34,6 +36,7 @@ export default function CreationScreen() {
 
   const inBooks = books.filter((b) => b.pages.some((p) => p.cast.includes(creation.id)));
   const facts: [string, string][] = [
+    ...(owner ? [['Drawn by', owner.name] as [string, string]] : []),
     ['Kind', KINDS[creation.kind].label],
     ...Object.entries(creation.answers).map(([k, v]): [string, string] => [ANSWER_LABELS[k] ?? k, v]),
     ['In books', inBooks.length ? inBooks.map((b) => b.title).join(', ') : 'Not yet'],

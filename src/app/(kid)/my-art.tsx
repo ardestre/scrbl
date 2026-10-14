@@ -7,7 +7,7 @@ import { Button, Empty, Field, Row, Screen, Title } from '@/components/ui';
 import { Radius, Spacing } from '@/constants/theme';
 import { useIsWide, useTheme } from '@/hooks/use-theme';
 import { KIND_ORDER, KINDS, styleName } from '@/world/catalog';
-import { useWorld } from '@/world/store';
+import { useChildWorld, useWorld } from '@/world/store';
 import { filterCreations, type Selection } from '@/world/folders';
 
 function FolderButton({ label, count, active, onPress }: { label: string; count: number; active: boolean; onPress: () => void }) {
@@ -28,8 +28,7 @@ function FolderButton({ label, count, active, onPress }: { label: string; count:
 export default function MyArtScreen() {
   const t = useTheme();
   const wide = useIsWide();
-  const creations = useWorld((s) => s.creations);
-  const folders = useWorld((s) => s.folders);
+  const { creations, folders } = useChildWorld();
   const addFolder = useWorld((s) => s.addFolder);
   const [sel, setSel] = useState<Selection>({ type: 'all' });
   const [newName, setNewName] = useState('');

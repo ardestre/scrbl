@@ -13,6 +13,7 @@ const line = (color = '#1D2240'): Stroke => ({ color, width: 12, points: [[100, 
 
 const creation = (over: Partial<Creation>): Creation => ({
   id: 'x',
+  childId: 'kid1',
   kind: 'character',
   name: 'Ziggy',
   answers: {},
@@ -87,7 +88,7 @@ describe('book drafting template', () => {
   const place = creation({ id: 'volcano', kind: 'place', name: 'Candy Volcano', answers: { special: 'it rains gumdrops' } });
 
   it('casts the hero, friend and place, with the place on every page', () => {
-    const book = draftBookFromTemplate({ cast: [place, friend, hero], theme: 'bravery', style: 'cartoon', mood: 'bright' }, 'b1', 5);
+    const book = draftBookFromTemplate({ childId: 'kid1', cast: [place, friend, hero], theme: 'bravery', style: 'cartoon', mood: 'bright' }, 'b1', 5);
     expect(book.title).toBe('Captain Noodle and Bubbles');
     expect(book.pages[0].text).toContain('In Candy Volcano, where it rains gumdrops');
     expect(book.pages[0].text).toContain('loved flying kites');
@@ -97,14 +98,14 @@ describe('book drafting template', () => {
   });
 
   it('adds a page for a real-life moment', () => {
-    const without = draftBookFromTemplate({ cast: [hero], theme: 'bedtime', style: 'storybook', mood: 'night' }, 'b', 0);
-    const withMoment = draftBookFromTemplate({ cast: [hero], theme: 'bedtime', moment: 'Mia lost her first tooth', style: 'storybook', mood: 'night' }, 'b', 0);
+    const without = draftBookFromTemplate({ childId: 'kid1', cast: [hero], theme: 'bedtime', style: 'storybook', mood: 'night' }, 'b', 0);
+    const withMoment = draftBookFromTemplate({ childId: 'kid1', cast: [hero], theme: 'bedtime', moment: 'Mia lost her first tooth', style: 'storybook', mood: 'night' }, 'b', 0);
     expect(withMoment.pages).toHaveLength(without.pages.length + 1);
     expect(withMoment.pages.some((p) => p.text.endsWith('Mia lost her first tooth.'))).toBe(true);
   });
 
   it('never lists a creation twice on one page', () => {
-    const book = draftBookFromTemplate({ cast: [hero], theme: 'sharing', style: 'storybook', mood: 'bright' }, 'b', 0);
+    const book = draftBookFromTemplate({ childId: 'kid1', cast: [hero], theme: 'sharing', style: 'storybook', mood: 'bright' }, 'b', 0);
     for (const page of book.pages) expect(new Set(page.cast).size).toBe(page.cast.length);
   });
 });

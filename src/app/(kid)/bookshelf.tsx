@@ -5,11 +5,11 @@ import { PageArt } from '@/components/page-art';
 import { Body, Empty, Screen, Title } from '@/components/ui';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
-import { useWorld } from '@/world/store';
+import { useChildWorld, useWorld } from '@/world/store';
 
 export default function BookshelfScreen() {
   const t = useTheme();
-  const books = useWorld((s) => s.books);
+  const { books } = useChildWorld();
   const creations = useWorld((s) => s.creations);
   return (
     <Screen>

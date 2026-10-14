@@ -2,6 +2,8 @@ import { THEMES } from './catalog';
 import type { ArtStyleId, Book, BookPage, Creation, MoodId, StoryThemeId } from './types';
 
 export type BookRequest = {
+  /** The kid whose world the book is set in. */
+  childId: string;
   cast: Creation[];
   theme: StoryThemeId;
   /** Something from real life the parent wants in the story, such as a lost tooth. */
@@ -63,5 +65,5 @@ export function draftBookFromTemplate(req: BookRequest, id: string, now: number)
       ? `${heroName} of ${place.name}`
       : `The Story of ${heroName}`;
 
-  return { id, title, theme: req.theme, style: req.style, mood: req.mood, pages, createdAt: now };
+  return { id, childId: req.childId, title, theme: req.theme, style: req.style, mood: req.mood, pages, createdAt: now };
 }

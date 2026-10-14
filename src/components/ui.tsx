@@ -123,6 +123,21 @@ export function Empty({ children }: { children: ReactNode }) {
   );
 }
 
+/** How much of a monthly allowance is left, such as creations or books. */
+export function Meter({ left, total, label }: { left: number; total: number; label: string }) {
+  const t = useTheme();
+  return (
+    <View style={styles.meter}>
+      <View style={[styles.track, { backgroundColor: t.line }]}>
+        <View style={{ width: `${Math.round((left / Math.max(total, 1)) * 100)}%`, height: '100%', backgroundColor: t.leaf }} />
+      </View>
+      <Text style={[styles.meterText, { color: t.text }]}>
+        {left} of {total} {label} left
+      </Text>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   screen: { flex: 1 },
   scroll: { padding: Spacing.five, alignItems: 'center' },
@@ -161,5 +176,8 @@ const styles = StyleSheet.create({
   },
   row: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: Spacing.three },
   panel: { borderWidth: 1, borderRadius: Radius.large, padding: Spacing.five, gap: Spacing.four },
+  meter: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, flexGrow: 1 },
+  track: { flexGrow: 1, minWidth: 80, height: 10, borderRadius: 99, overflow: 'hidden' },
+  meterText: { fontSize: 14, fontWeight: '700', fontVariant: ['tabular-nums'] },
   empty: { borderWidth: 2, borderStyle: 'dashed', borderRadius: Radius.medium, padding: Spacing.six },
 });

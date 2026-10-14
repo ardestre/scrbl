@@ -16,7 +16,10 @@ export default function RootLayout() {
       }}>
       <StatusBar style="auto" />
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(kid)" />
+        <Stack.Screen name="parent" />
+        <Stack.Screen name="profile/[id]" options={{ presentation: 'modal' }} />
         <Stack.Screen name="creation/[id]" options={{ presentation: 'modal' }} />
         <Stack.Screen name="book/[id]" options={{ presentation: 'modal' }} />
       </Stack>
