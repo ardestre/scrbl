@@ -5,20 +5,21 @@ import { ArtView } from '@/components/art-view';
 import { useWorld } from '@/world/store';
 import type { AvatarId, Profile } from '@/world/types';
 
-const INK = '#1D2240';
+const INK = '#231F20';
 
+/** Tile colours come from the SCRBL palette (see Palette in constants/theme). */
 export const AVATARS: { id: AvatarId; name: string; background: string }[] = [
-  { id: 'blob', name: 'Blob', background: '#4DABF7' },
-  { id: 'dragon', name: 'Dragon', background: '#FF8787' },
-  { id: 'robot', name: 'Robot', background: '#FFD43B' },
-  { id: 'cat', name: 'Cat', background: '#9775FA' },
-  { id: 'alien', name: 'Alien', background: '#20C997' },
-  { id: 'bunny', name: 'Bunny', background: '#F783AC' },
-  { id: 'dino', name: 'Dino', background: '#FF922B' },
-  { id: 'owl', name: 'Owl', background: '#5C7CFA' },
+  { id: 'blob', name: 'Blob', background: '#7EBDC2' },
+  { id: 'dragon', name: 'Dragon', background: '#E2735F' },
+  { id: 'robot', name: 'Robot', background: '#F3DFA2' },
+  { id: 'cat', name: 'Cat', background: '#5E9EA3' },
+  { id: 'alien', name: 'Alien', background: '#BB4430' },
+  { id: 'bunny', name: 'Bunny', background: '#F4D3CB' },
+  { id: 'dino', name: 'Dino', background: '#A9D3D6' },
+  { id: 'owl', name: 'Owl', background: '#EFE6DD' },
 ];
 
-const background = (id: AvatarId) => AVATARS.find((a) => a.id === id)?.background ?? '#4DABF7';
+const background = (id: AvatarId) => AVATARS.find((a) => a.id === id)?.background ?? '#7EBDC2';
 
 /** A profile's icon: one of the kid's own drawings if they picked one, otherwise a built-in character. */
 export function ProfileAvatar({ profile, size }: { profile: Profile; size: number }) {

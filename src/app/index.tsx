@@ -5,11 +5,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Path, Rect } from 'react-native-svg';
 
 import { ProfileAvatar } from '@/components/avatar';
-import { Fonts, Radius, Spacing } from '@/constants/theme';
+import { Fonts, Palette, Radius, Spacing } from '@/constants/theme';
 import { useWorld } from '@/world/store';
 
 /** The "Who's drawing?" screen is always dark, like a theatre before the show. */
-const STAGE = { background: '#0E1024', text: '#FFFFFF', muted: '#A4A9D2', tile: '#22264A', ring: '#FFFFFF' };
+const STAGE = { background: Palette.shadowGrey, text: Palette.linen, muted: '#B8ACA2', tile: '#2E2929', ring: Palette.vanillaCustard };
 
 export default function WhoIsDrawing() {
   const profiles = useWorld((s) => s.profiles);
@@ -34,11 +34,11 @@ export default function WhoIsDrawing() {
     <SafeAreaView style={[styles.stage, { backgroundColor: STAGE.background }]}>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.logo} accessibilityLabel="SCRBL">
-          <Text style={{ color: '#F06595' }}>S</Text>
-          <Text style={{ color: '#FFC34D' }}>C</Text>
-          <Text style={{ color: '#69DB7C' }}>R</Text>
-          <Text style={{ color: '#8FA3FF' }}>B</Text>
-          <Text style={{ color: '#F06595' }}>L</Text>
+          <Text style={{ color: '#E2735F' }}>S</Text>
+          <Text style={{ color: Palette.vanillaCustard }}>C</Text>
+          <Text style={{ color: Palette.tropicalTeal }}>R</Text>
+          <Text style={{ color: Palette.linen }}>B</Text>
+          <Text style={{ color: '#E2735F' }}>L</Text>
         </Text>
         <Text accessibilityRole="header" style={styles.title}>
           {profiles.length ? 'Who’s drawing today?' : 'Welcome to SCRBL'}

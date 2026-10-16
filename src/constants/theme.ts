@@ -2,34 +2,47 @@ import '@/global.css';
 
 import { Platform } from 'react-native';
 
+/**
+ * SCRBL palette: Shadow Grey #231F20, Tomato Jam #BB4430, Tropical Teal #7EBDC2,
+ * Vanilla Custard #F3DFA2 and Linen #EFE6DD. Other values are tints and shades of these,
+ * picked so text stays readable (at least 4.5:1 contrast).
+ */
+export const Palette = {
+  shadowGrey: '#231F20',
+  tomatoJam: '#BB4430',
+  tropicalTeal: '#7EBDC2',
+  vanillaCustard: '#F3DFA2',
+  linen: '#EFE6DD',
+} as const;
+
 export const Colors = {
   light: {
-    text: '#1D2240',
-    textSecondary: '#5A6088',
-    background: '#E9EEF7',
-    surface: '#FFFFFF',
-    surfaceAlt: '#F4F6FB',
-    line: '#D8DDEA',
-    accent: '#3550D2',
-    accentSoft: '#E3E8FF',
+    text: Palette.shadowGrey,
+    textSecondary: '#5E5550',
+    background: Palette.linen,
+    surface: '#F7F1EA',
+    surfaceAlt: Palette.linen,
+    line: '#DCCFC2',
+    accent: Palette.tomatoJam,
+    accentSoft: '#F4D3CB',
     onAccent: '#FFFFFF',
-    sun: '#FFB21E',
-    berry: '#D6336C',
-    leaf: '#2B8A3E',
+    sun: Palette.vanillaCustard,
+    berry: '#A3392A',
+    leaf: Palette.tropicalTeal,
   },
   dark: {
-    text: '#EEF0FF',
-    textSecondary: '#A4A9D2',
-    background: '#101228',
-    surface: '#1A1D3A',
-    surfaceAlt: '#22264A',
-    line: '#30356A',
-    accent: '#8FA3FF',
-    accentSoft: '#2A3170',
-    onAccent: '#10122A',
-    sun: '#FFC34D',
-    berry: '#F06595',
-    leaf: '#69DB7C',
+    text: Palette.linen,
+    textSecondary: '#B8ACA2',
+    background: '#1A1718',
+    surface: Palette.shadowGrey,
+    surfaceAlt: '#2E2929',
+    line: '#463D3B',
+    accent: '#E2735F',
+    accentSoft: '#5A2A22',
+    onAccent: Palette.shadowGrey,
+    sun: Palette.vanillaCustard,
+    berry: '#E2735F',
+    leaf: Palette.tropicalTeal,
   },
 } as const;
 
@@ -39,7 +52,7 @@ export type ThemeColors = { [K in keyof typeof Colors.light]: string };
 export const Paper = '#FFFFFF';
 
 /** Text on the sun-yellow kid bubbles is always dark, in both themes. */
-export const OnSun = '#2A1E00';
+export const OnSun = Palette.shadowGrey;
 
 export const Fonts = {
   display: Platform.select({ ios: 'ui-rounded', web: 'var(--font-rounded)', default: undefined }),

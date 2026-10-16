@@ -2,7 +2,7 @@ import Svg, { Circle, Ellipse, Path } from 'react-native-svg';
 
 import type { CreationKind } from '@/world/types';
 
-const INK = '#1D2240';
+const INK = '#231F20';
 
 export function KindIcon({ kind, size = 64 }: { kind: CreationKind; size?: number }) {
   return (
