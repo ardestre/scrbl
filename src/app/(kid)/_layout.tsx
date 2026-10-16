@@ -4,15 +4,16 @@ import { Tabs } from 'expo-router/js-tabs';
 
 import { ProfileAvatar } from '@/components/avatar';
 import { TabIcon, type TabIconName } from '@/components/tab-icon';
-import { Spacing } from '@/constants/theme';
+import { chunky } from '@/components/ui';
+import { Fonts, Ink, Pop, Spacing, type PopName } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useActiveChild, useWorld } from '@/world/store';
 
-const TABS: { name: string; title: string; icon: TabIconName }[] = [
-  { name: 'create', title: 'Create', icon: 'create' },
-  { name: 'my-art', title: 'My Art', icon: 'art' },
-  { name: 'bookshelf', title: 'Bookshelf', icon: 'books' },
-  { name: 'story-time', title: 'Story Time', icon: 'story' },
+const TABS: { name: string; title: string; icon: TabIconName; tone: PopName }[] = [
+  { name: 'create', title: 'Create', icon: 'create', tone: 'orange' },
+  { name: 'my-art', title: 'My Art', icon: 'art', tone: 'pink' },
+  { name: 'bookshelf', title: 'Bookshelf', icon: 'books', tone: 'sky' },
+  { name: 'story-time', title: 'Story Time', icon: 'story', tone: 'yellow' },
 ];
 
 export default function KidLayout() {
@@ -28,16 +29,22 @@ export default function KidLayout() {
         headerShadowVisible: false,
         headerStyle: { backgroundColor: t.surface },
         headerLeft: () => <SwitchProfile />,
-        tabBarActiveTintColor: t.accentText,
+        // The selected tab lights up as a coloured sticker with ink text.
+        tabBarActiveTintColor: Ink,
         tabBarInactiveTintColor: t.textSecondary,
-        tabBarStyle: { backgroundColor: t.surface, borderTopColor: t.line },
-        tabBarLabelStyle: { fontWeight: '800', fontSize: 13 },
+        tabBarStyle: { backgroundColor: t.surface, borderTopColor: t.ink, borderTopWidth: 2.5, height: 78, paddingTop: 8, paddingBottom: 10 },
+        tabBarItemStyle: { borderRadius: 18, marginHorizontal: 6, overflow: 'hidden' },
+        tabBarLabelStyle: { fontFamily: Fonts.label, fontSize: 14 },
       }}>
       {TABS.map((tab) => (
         <Tabs.Screen
           key={tab.name}
           name={tab.name}
-          options={{ title: tab.title, tabBarIcon: ({ color }) => <TabIcon name={tab.icon} color={color} /> }}
+          options={{
+            title: tab.title,
+            tabBarActiveBackgroundColor: Pop[tab.tone],
+            tabBarIcon: ({ color }) => <TabIcon name={tab.icon} color={color} />,
+          }}
         />
       ))}
     </Tabs>
@@ -58,16 +65,16 @@ function SwitchProfile() {
         setActiveChild(null);
         router.replace('/');
       }}
-      style={({ pressed }) => [styles.switch, { opacity: pressed ? 0.7 : 1 }]}>
-      <ProfileAvatar profile={child} size={36} />
+      style={({ pressed }) => [styles.switch, chunky(t, { pressed, depth: 3 }), { backgroundColor: t.surfaceAlt }]}>
+      <ProfileAvatar profile={child} size={34} />
       <Text style={[styles.name, { color: t.text }]}>{child.name}</Text>
-      <Text style={[styles.hint, { color: t.textSecondary }]}>Switch</Text>
+      <Text style={[styles.hint, { color: t.accentText }]}>Switch</Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  switch: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, paddingHorizontal: Spacing.four },
-  name: { fontSize: 17, fontWeight: '800' },
-  hint: { fontSize: 14, fontWeight: '700' },
+  switch: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, marginLeft: Spacing.four, padding: 4, paddingRight: 14, borderRadius: 999 },
+  name: { fontSize: 18, fontFamily: Fonts.label },
+  hint: { fontSize: 14, fontFamily: Fonts.medium },
 });

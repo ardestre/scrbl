@@ -6,7 +6,7 @@ import { ArtView } from '@/components/art-view';
 import { AVATARS, CharacterAvatar } from '@/components/avatar';
 import { PinGate } from '@/components/pin-gate';
 import { Body, Button, Field, Row, Screen, Title } from '@/components/ui';
-import { Radius, Spacing } from '@/constants/theme';
+import { Fonts, Ink, Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useWorld } from '@/world/store';
 import type { AvatarId } from '@/world/types';
@@ -72,11 +72,11 @@ function ProfileEditor() {
                   setAvatar(a.id);
                   setDrawingId(undefined);
                 }}
-                style={[styles.pick, { borderColor: on ? t.accent : 'transparent' }]}>
-                <View style={styles.clip}>
+                style={[styles.pick, on ? { backgroundColor: t.accentSoft, borderColor: t.ink, boxShadow: `3px 3px 0px ${t.ink}` } : null]}>
+                <View style={[styles.clip, { borderColor: Ink }]}>
                   <CharacterAvatar id={a.id} size={84} />
                 </View>
-                <Text style={[styles.pickName, { color: t.text }]}>{a.name}</Text>
+                <Text style={[styles.pickName, { color: on ? Ink : t.text }]}>{a.name}</Text>
               </Pressable>
             );
           })}
@@ -96,11 +96,11 @@ function ProfileEditor() {
                   accessibilityLabel={`Use ${c.name} as the icon`}
                   accessibilityState={{ selected: on }}
                   onPress={() => setDrawingId(c.id)}
-                  style={[styles.pick, { borderColor: on ? t.accent : 'transparent' }]}>
-                  <View style={[styles.clip, { width: 84, height: 84 }]}>
+                  style={[styles.pick, on ? { backgroundColor: t.accentSoft, borderColor: t.ink, boxShadow: `3px 3px 0px ${t.ink}` } : null]}>
+                  <View style={[styles.clip, { width: 84, height: 84, borderColor: Ink }]}>
                     <ArtView art={c} />
                   </View>
-                  <Text style={[styles.pickName, { color: t.text }]} numberOfLines={1}>
+                  <Text style={[styles.pickName, { color: on ? Ink : t.text }]} numberOfLines={1}>
                     {c.name}
                   </Text>
                 </Pressable>
@@ -138,10 +138,10 @@ function ProfileEditor() {
 }
 
 const styles = StyleSheet.create({
-  label: { fontSize: 12, fontWeight: '800', letterSpacing: 1 },
+  label: { fontSize: 13, fontFamily: Fonts.label, letterSpacing: 1 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.three },
-  pick: { width: 100, alignItems: 'center', gap: Spacing.one, padding: 5, borderWidth: 3, borderRadius: Radius.medium },
-  clip: { borderRadius: 14, overflow: 'hidden' },
-  pickName: { fontSize: 14, fontWeight: '700' },
-  confirm: { borderWidth: 2, borderRadius: Radius.medium, padding: Spacing.four, gap: Spacing.three },
+  pick: { width: 104, alignItems: 'center', gap: Spacing.one, padding: 6, borderWidth: 2.5, borderColor: 'transparent', borderRadius: Radius.large },
+  clip: { borderRadius: 16, borderWidth: 2.5, overflow: 'hidden' },
+  pickName: { fontSize: 15, fontFamily: Fonts.label },
+  confirm: { borderWidth: 2.5, borderRadius: Radius.large, padding: Spacing.four, gap: Spacing.three },
 });

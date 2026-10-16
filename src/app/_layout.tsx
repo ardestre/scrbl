@@ -1,3 +1,4 @@
+import { Fredoka_500Medium, Fredoka_600SemiBold, Fredoka_700Bold, useFonts } from '@expo-google-fonts/fredoka';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
@@ -8,6 +9,9 @@ export default function RootLayout() {
   const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
   const c = Colors[scheme];
   const base = scheme === 'dark' ? DarkTheme : DefaultTheme;
+  const [fontsLoaded, fontError] = useFonts({ Fredoka_500Medium, Fredoka_600SemiBold, Fredoka_700Bold });
+  // Wait for the rounded font so headings don't jump; if it fails to load, carry on with the system font.
+  if (!fontsLoaded && !fontError) return null;
   return (
     <ThemeProvider
       value={{

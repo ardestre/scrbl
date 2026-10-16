@@ -1,51 +1,65 @@
 import '@/global.css';
 
-import { Platform } from 'react-native';
-
-/**
- * SCRBL palette: Shadow Grey #231F20, Tomato Jam #BB4430, Tropical Teal #7EBDC2,
- * Vanilla Custard #F3DFA2 and Linen #EFE6DD. Other values are tints and shades of these,
- * picked so text stays readable (at least 4.5:1 contrast).
- */
+/** The base colours: Linen paper and Shadow Grey ink. */
 export const Palette = {
   shadowGrey: '#231F20',
-  tomatoJam: '#BB4430',
-  tropicalTeal: '#7EBDC2',
-  vanillaCustard: '#F3DFA2',
   linen: '#EFE6DD',
 } as const;
 
+/**
+ * Bright sticker colours for tiles, tabs and badges. Text on any of them is always ink
+ * (Shadow Grey), which keeps at least 6:1 contrast in both themes.
+ */
+export const Pop = {
+  pink: '#FF8AD8',
+  lime: '#D7F25B',
+  purple: '#A98BFF',
+  orange: '#FF8A5B',
+  sky: '#8EC9FF',
+  mint: '#8EE3A8',
+  yellow: '#FFE15A',
+  lavender: '#D9CCFF',
+} as const;
+
+export type PopName = keyof typeof Pop;
+
+/** Ink for outlines, chunky shadows and text on Pop colours. */
+export const Ink = Palette.shadowGrey;
+
 export const Colors = {
   light: {
-    text: Palette.shadowGrey,
+    text: Ink,
     textSecondary: '#5E5550',
     background: Palette.linen,
     surface: Palette.linen,
-    surfaceAlt: '#F7F1EA',
+    /** Cards and panels: white paper on the Linen desk. */
+    surfaceAlt: '#FFFFFF',
     line: '#D6C7B9',
-    accent: Palette.tomatoJam,
-    /** Tomato Jam a touch darker, for small text on Linen. */
-    accentText: '#B03F2C',
-    accentSoft: '#F4D3CB',
+    /** Outlines and hard shadows on cards and buttons. */
+    ink: Ink,
+    accent: '#5A3BE0',
+    accentText: '#5A3BE0',
+    accentSoft: Pop.lavender,
     onAccent: '#FFFFFF',
-    sun: Palette.vanillaCustard,
-    berry: '#A3392A',
-    leaf: Palette.tropicalTeal,
+    sun: Pop.yellow,
+    berry: '#B5174F',
+    leaf: Pop.mint,
   },
   dark: {
     text: Palette.linen,
     textSecondary: '#B8ACA2',
-    background: '#1A1718',
-    surface: Palette.shadowGrey,
-    surfaceAlt: '#2E2929',
-    line: '#463D3B',
-    accent: '#E2735F',
-    accentText: '#E2735F',
-    accentSoft: '#5A2A22',
-    onAccent: Palette.shadowGrey,
-    sun: Palette.vanillaCustard,
-    berry: '#E2735F',
-    leaf: Palette.tropicalTeal,
+    background: '#141214',
+    surface: '#1C191A',
+    surfaceAlt: '#2A2526',
+    line: '#3D3536',
+    ink: '#000000',
+    accent: Pop.purple,
+    accentText: '#C3AEFF',
+    accentSoft: '#3A2F66',
+    onAccent: Ink,
+    sun: Pop.yellow,
+    berry: '#FF8AB0',
+    leaf: Pop.mint,
   },
 } as const;
 
@@ -54,11 +68,14 @@ export type ThemeColors = { [K in keyof typeof Colors.light]: string };
 /** Drawing paper stays white in both themes, like real paper. */
 export const Paper = '#FFFFFF';
 
-/** Text on the sun-yellow kid bubbles is always dark, in both themes. */
-export const OnSun = Palette.shadowGrey;
+/** Text on the sun-yellow kid bubbles and on every Pop colour is always ink, in both themes. */
+export const OnSun = Ink;
 
+/** Fredoka, a round, friendly face, for headings, buttons and labels. Body text stays the system font. */
 export const Fonts = {
-  display: Platform.select({ ios: 'ui-rounded', web: 'var(--font-rounded)', default: undefined }),
+  display: 'Fredoka_700Bold',
+  label: 'Fredoka_600SemiBold',
+  medium: 'Fredoka_500Medium',
 };
 
 export const Spacing = {

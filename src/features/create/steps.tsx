@@ -4,9 +4,10 @@ import { router } from 'expo-router';
 
 import { ArtView } from '@/components/art-view';
 import { DrawingPad } from '@/components/drawing-pad';
-import { KindIcon } from '@/components/kind-icon';
-import { Body, Button, Chip, Field, Row, Title } from '@/components/ui';
-import { OnSun, Radius, Spacing } from '@/constants/theme';
+import { KIND_TONE, KindIcon } from '@/components/kind-icon';
+import { Sticker } from '@/components/sticker';
+import { Body, Button, Card, Chip, chunky, Field, Row, Title } from '@/components/ui';
+import { Fonts, Ink, Pop, Radius, Spacing } from '@/constants/theme';
 import { useIsWide, useTheme } from '@/hooks/use-theme';
 import { BRUSH_SIZES, CRAYONS, KIND_ORDER, KINDS, MOODS, PALETTES, STYLES, styleName } from '@/world/catalog';
 import { questionsFor } from '@/world/questions';
@@ -18,27 +19,29 @@ import type { Draft, useCreateFlow } from './use-create-flow';
 type Flow = ReturnType<typeof useCreateFlow>;
 
 export function KindPicker({ onPick }: { onPick: Flow['start'] }) {
-  const t = useTheme();
   return (
     <>
-      <View>
-        <Title size={32}>What do you want to draw today?</Title>
-        <Body muted>Draw it however you like. Pip will help bring it to life.</Body>
-      </View>
+      <Row style={{ flexWrap: 'nowrap', alignItems: 'center' }}>
+        <View style={{ flexShrink: 1 }}>
+          <Title size={36}>What do you want to draw today?</Title>
+          <Body muted>Draw it however you like. Pip will help bring it to life.</Body>
+        </View>
+        <Sticker shape="smile" tone="yellow" size={64} rotate={12} />
+      </Row>
       <View style={styles.kinds}>
-        {KIND_ORDER.map((kind) => (
-          <Pressable
+        {KIND_ORDER.map((kind, i) => (
+          <Card
             key={kind}
-            accessibilityRole="button"
+            tone={KIND_TONE[kind]}
             accessibilityLabel={`Draw a ${KINDS[kind].label}`}
             onPress={() => onPick(kind)}
-            style={({ pressed }) => [styles.kind, { backgroundColor: t.surfaceAlt, borderColor: pressed ? t.accent : t.line }]}>
-            <KindIcon kind={kind} />
-            <Title size={20}>{KINDS[kind].label}</Title>
-            <Body muted style={{ textAlign: 'center', fontSize: 14 }}>
-              {KINDS[kind].hint}
-            </Body>
-          </Pressable>
+            style={[styles.kind, { transform: [{ rotate: `${i % 2 ? 1.2 : -1.2}deg` }] }]}>
+            <View style={styles.kindIcon}>
+              <KindIcon kind={kind} />
+            </View>
+            <Text style={styles.kindName}>{KINDS[kind].label}</Text>
+            <Text style={styles.kindHint}>{KINDS[kind].hint}</Text>
+          </Card>
         ))}
       </View>
     </>
@@ -64,7 +67,7 @@ export function DrawStep({ flow, draft }: { flow: Flow; draft: Draft }) {
         </Row>
       </Row>
       <View style={[styles.studio, { flexDirection: wide ? 'row' : 'column' }]}>
-        <View accessibilityLabel="Crayons" style={[styles.tools, { backgroundColor: t.surfaceAlt, borderColor: t.line, flexDirection: wide ? 'column' : 'row' }]}>
+        <View accessibilityLabel="Crayons" style={[styles.tools, chunky(t), { backgroundColor: t.surfaceAlt, flexDirection: wide ? 'column' : 'row' }]}>
           {CRAYONS.map((c) => (
             <Pressable
               key={c}
@@ -72,7 +75,7 @@ export function DrawStep({ flow, draft }: { flow: Flow; draft: Draft }) {
               accessibilityLabel={`Crayon ${c}`}
               accessibilityState={{ selected: color === c }}
               onPress={() => setColor(c)}
-              style={[styles.swatch, { backgroundColor: c, borderColor: color === c ? t.text : 'transparent' }]}
+              style={[styles.swatch, { backgroundColor: c, borderColor: t.ink, borderWidth: color === c ? 4 : 2, transform: [{ scale: color === c ? 1.12 : 1 }] }]}
             />
           ))}
           {BRUSH_SIZES.map((s) => (
@@ -82,8 +85,8 @@ export function DrawStep({ flow, draft }: { flow: Flow; draft: Draft }) {
               accessibilityLabel={`Brush size ${s}`}
               accessibilityState={{ selected: size === s }}
               onPress={() => setSize(s)}
-              style={[styles.size, { borderColor: size === s ? t.text : t.line, backgroundColor: t.surface }]}>
-              <View style={{ width: s / 1.4 + 4, height: s / 1.4 + 4, borderRadius: 99, backgroundColor: t.text }} />
+              style={[styles.size, { borderColor: t.ink, borderWidth: size === s ? 3.5 : 2, backgroundColor: size === s ? Pop.yellow : t.surface }]}>
+              <View style={{ width: s / 1.4 + 4, height: s / 1.4 + 4, borderRadius: 99, backgroundColor: size === s ? Ink : t.text }} />
             </Pressable>
           ))}
         </View>
@@ -102,10 +105,15 @@ function Bubble({ who, text }: { who: 'helper' | 'kid'; text: string }) {
   const t = useTheme();
   const kid = who === 'kid';
   return (
-    <View style={{ alignSelf: kid ? 'flex-end' : 'flex-start', maxWidth: '85%', gap: 2 }}>
+    <View style={{ alignSelf: kid ? 'flex-end' : 'flex-start', maxWidth: '85%', gap: 4 }}>
       {!kid ? <Text style={[styles.helperName, { color: t.accentText }]}>Pip</Text> : null}
-      <View style={[styles.bubble, kid ? { backgroundColor: t.sun, borderBottomRightRadius: 6 } : { backgroundColor: t.accentSoft, borderBottomLeftRadius: 6 }]}>
-        <Text style={[styles.bubbleText, { color: kid ? OnSun : t.text }]}>{text}</Text>
+      <View
+        style={[
+          styles.bubble,
+          chunky(t, { depth: 3 }),
+          kid ? { backgroundColor: Pop.yellow, borderBottomRightRadius: 6 } : { backgroundColor: Pop.lavender, borderBottomLeftRadius: 6 },
+        ]}>
+        <Text style={styles.bubbleText}>{text}</Text>
       </View>
     </View>
   );
@@ -126,7 +134,7 @@ export function ChatStep({ flow, draft }: { flow: Flow; draft: Draft }) {
   return (
     <View style={[styles.chat, { flexDirection: wide ? 'row' : 'column' }]}>
       <View style={{ width: wide ? 280 : '100%', gap: Spacing.three }}>
-        <ArtView art={{ ...preview, style: 'storybook' }} mode="sketch" style={[styles.thumb, { borderColor: t.line }]} />
+        <ArtView art={{ ...preview, style: 'storybook' }} mode="sketch" style={[styles.thumb, chunky(t)]} />
         <Button kind="ghost" label="Keep drawing" onPress={flow.backToDrawing} />
       </View>
       <View style={{ flex: 1, gap: Spacing.three, width: '100%' }}>
@@ -160,22 +168,19 @@ export function ChatStep({ flow, draft }: { flow: Flow; draft: Draft }) {
         {q?.type === 'style' ? (
           <View style={styles.styleGrid}>
             {STYLES.map((s) => (
-              <Pressable
+              <Card
                 key={s.id}
-                accessibilityRole="button"
                 accessibilityLabel={s.locked ? `${s.name}, more styles coming` : s.name}
-                accessibilityState={{ disabled: !!s.locked }}
-                disabled={s.locked}
-                onPress={() => send(s.id, s.name)}
-                style={({ pressed }) => [styles.styleCard, { borderColor: pressed ? t.accent : t.line, backgroundColor: t.surface, opacity: s.locked ? 0.5 : 1 }]}>
-                <ArtView art={{ ...preview, style: s.id }} mode={s.locked ? 'sketch' : 'art'} style={{ borderRadius: 10, overflow: 'hidden' }} />
+                onPress={s.locked ? undefined : () => send(s.id, s.name)}
+                style={[styles.styleCard, { opacity: s.locked ? 0.5 : 1 }]}>
+                <ArtView art={{ ...preview, style: s.id }} mode={s.locked ? 'sketch' : 'art'} style={{ borderRadius: 12, overflow: 'hidden' }} />
                 <Text style={[styles.styleName, { color: t.text }]}>{s.name}</Text>
                 {s.locked ? (
-                  <View style={[styles.lock, { backgroundColor: t.text }]}>
-                    <Text style={{ color: t.surface, fontSize: 11, fontWeight: '800' }}>More styles</Text>
+                  <View style={[styles.lock, { backgroundColor: Pop.yellow, borderColor: Ink }]}>
+                    <Text style={{ color: Ink, fontSize: 12, fontFamily: Fonts.label }}>More soon</Text>
                   </View>
                 ) : null}
-              </Pressable>
+              </Card>
             ))}
           </View>
         ) : null}
@@ -189,7 +194,7 @@ export function ChatStep({ flow, draft }: { flow: Flow; draft: Draft }) {
                 left={
                   <View style={{ flexDirection: 'row', gap: 2 }}>
                     {PALETTES[m.id].slice(0, 4).map((c) => (
-                      <View key={c} style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: c }} />
+                      <View key={c} style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: c, borderWidth: 1.5, borderColor: t.ink }} />
                     ))}
                   </View>
                 }
@@ -206,7 +211,11 @@ export function MakingStep({ draft }: { draft: Draft }) {
   const t = useTheme();
   return (
     <View style={styles.making}>
-      <ActivityIndicator size="large" color={t.accent} />
+      <Row style={{ justifyContent: 'center' }}>
+        <Sticker shape="sparkle" tone="pink" size={44} rotate={-10} />
+        <ActivityIndicator size="large" color={t.accent} />
+        <Sticker shape="burst" tone="lime" size={44} rotate={10} />
+      </Row>
       <Title>Bringing {draft.answers.name} to life…</Title>
       <Body muted>Pip is painting 3 versions in {styleName(draft.answers.style as ArtStyleId)} style.</Body>
     </View>
@@ -214,7 +223,6 @@ export function MakingStep({ draft }: { draft: Draft }) {
 }
 
 export function PickStep({ flow, draft }: { flow: Flow; draft: Draft }) {
-  const t = useTheme();
   const style = draft.answers.style as ArtStyleId;
   const mood = draft.answers.mood as MoodId;
   return (
@@ -225,15 +233,14 @@ export function PickStep({ flow, draft }: { flow: Flow; draft: Draft }) {
       </View>
       <View style={styles.versions}>
         {draft.versions.map((v, i) => (
-          <Pressable
+          <Card
             key={v.variant}
-            accessibilityRole="button"
             accessibilityLabel={`Version ${i + 1}`}
-            accessibilityState={{ selected: draft.picked === v.variant }}
+            selected={draft.picked === v.variant}
             onPress={() => flow.pick(v.variant)}
-            style={[styles.version, { borderColor: draft.picked === v.variant ? t.accent : t.line, backgroundColor: t.surface }]}>
-            <ArtView art={{ sketch: draft.sketch, style, mood, variant: v.variant, artUri: v.uri }} style={{ borderRadius: 14, overflow: 'hidden' }} />
-          </Pressable>
+            style={styles.version}>
+            <ArtView art={{ sketch: draft.sketch, style, mood, variant: v.variant, artUri: v.uri }} style={{ borderRadius: 16, overflow: 'hidden' }} />
+          </Card>
         ))}
       </View>
       <Row>
@@ -254,12 +261,12 @@ export function SavedStep({ flow, draft }: { flow: Flow; draft: Draft }) {
   return (
     <View style={[styles.chat, { flexDirection: wide ? 'row' : 'column' }]}>
       <View style={{ width: wide ? 280 : '100%' }}>
-        <ArtView art={creation} style={[styles.thumb, { borderColor: t.line }]} />
+        <ArtView art={creation} style={[styles.thumb, chunky(t)]} />
       </View>
       <View style={{ flex: 1, gap: Spacing.four, width: '100%' }}>
         <Bubble who="helper" text={`${creation.name} is in your world now! Want to put ${creation.name} in a folder?`} />
         <Row>
-          <Chip label={`Just ${KINDS[creation.kind].plural}`} selected={creation.folderId === null} onPress={() => updateCreation(creation.id, { folderId: null })} />
+          <Chip tone={KIND_TONE[creation.kind]} label={`Just ${KINDS[creation.kind].plural}`} selected={creation.folderId === null} onPress={() => updateCreation(creation.id, { folderId: null })} />
           {folders.map((f) => (
             <Chip key={f.id} label={f.name} selected={creation.folderId === f.id} onPress={() => updateCreation(creation.id, { folderId: f.id })} />
           ))}
@@ -281,30 +288,25 @@ export function SavedStep({ flow, draft }: { flow: Flow; draft: Draft }) {
 }
 
 const styles = StyleSheet.create({
-  kinds: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.four },
-  kind: {
-    flexGrow: 1,
-    flexBasis: 200,
-    alignItems: 'center',
-    gap: Spacing.two,
-    padding: Spacing.five,
-    borderRadius: Radius.large,
-    borderWidth: 2,
-  },
+  kinds: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.five, paddingTop: Spacing.two },
+  kind: { flexGrow: 1, flexBasis: 200, alignItems: 'center', gap: Spacing.two, padding: Spacing.five },
+  kindIcon: { width: 92, height: 92, borderRadius: 46, backgroundColor: '#FFFFFF', borderWidth: 2.5, borderColor: Ink, alignItems: 'center', justifyContent: 'center' },
+  kindName: { fontFamily: Fonts.display, fontSize: 22, color: Ink },
+  kindHint: { fontSize: 15, color: Ink, textAlign: 'center', fontWeight: '500' },
   studio: { gap: Spacing.four, alignItems: 'flex-start' },
-  tools: { flexWrap: 'wrap', gap: Spacing.three, padding: Spacing.three, borderRadius: Radius.medium, borderWidth: 1 },
-  swatch: { width: 42, height: 42, borderRadius: 21, borderWidth: 3 },
-  size: { width: 42, height: 42, borderRadius: 12, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
+  tools: { flexWrap: 'wrap', gap: Spacing.three, padding: Spacing.three, borderRadius: Radius.large },
+  swatch: { width: 42, height: 42, borderRadius: 21 },
+  size: { width: 42, height: 42, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   chat: { gap: Spacing.five, alignItems: 'flex-start' },
-  thumb: { borderRadius: Radius.medium, borderWidth: 1, overflow: 'hidden' },
-  helperName: { fontWeight: '800', fontSize: 13 },
-  bubble: { paddingVertical: 10, paddingHorizontal: 14, borderRadius: 18 },
-  bubbleText: { fontSize: 16, fontWeight: '600', lineHeight: 22 },
-  styleGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.three },
-  styleCard: { width: 140, padding: 8, gap: 6, borderRadius: 16, borderWidth: 2 },
-  styleName: { fontWeight: '800', fontSize: 14 },
-  lock: { position: 'absolute', top: 14, right: 14, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 99 },
+  thumb: { borderRadius: Radius.large, overflow: 'hidden' },
+  helperName: { fontFamily: Fonts.label, fontSize: 15 },
+  bubble: { paddingVertical: 11, paddingHorizontal: 16, borderRadius: 20 },
+  bubbleText: { fontSize: 17, fontFamily: Fonts.medium, lineHeight: 23, color: Ink },
+  styleGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.four },
+  styleCard: { width: 140, gap: 6 },
+  styleName: { fontFamily: Fonts.label, fontSize: 16, paddingHorizontal: 4 },
+  lock: { position: 'absolute', top: 14, right: 14, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 99, borderWidth: 2 },
   making: { alignItems: 'center', gap: Spacing.four, paddingVertical: 80 },
-  versions: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.four },
-  version: { flexGrow: 1, flexBasis: 220, padding: 6, borderRadius: 20, borderWidth: 3 },
+  versions: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.five },
+  version: { flexGrow: 1, flexBasis: 220 },
 });

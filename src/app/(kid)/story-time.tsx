@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 
 import { ArtView } from '@/components/art-view';
 import { PageArt } from '@/components/page-art';
 import { PinGate } from '@/components/pin-gate';
-import { Body, Button, Chip, Empty, Field, Meter, Panel, Row, Screen, Title } from '@/components/ui';
-import { Radius, Spacing } from '@/constants/theme';
+import { Sticker } from '@/components/sticker';
+import { Body, Button, Card, Chip, chunky, Empty, Field, Meter, Panel, Row, Screen, Title } from '@/components/ui';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { ai } from '@/services/ai';
 import { STYLES, THEMES } from '@/world/catalog';
@@ -75,7 +76,7 @@ function StoryTime() {
         </Row>
         <View style={styles.pages}>
           {draft.pages.map((p, i) => (
-            <View key={i} style={[styles.page, { borderColor: t.line, backgroundColor: t.surface }]}>
+            <View key={i} style={[styles.page, chunky(t), { backgroundColor: t.surfaceAlt }]}>
               <PageArt book={draft} page={p} creations={creations} />
               <Text style={[styles.pageNumber, { color: t.textSecondary }]}>Page {i + 1}</Text>
               <Field value={p.text} onChangeText={(text) => setPage(i, text)} multiline accessibilityLabel={`Page ${i + 1} text`} style={{ minHeight: 90, textAlignVertical: 'top', fontWeight: '600' }} />
@@ -90,7 +91,10 @@ function StoryTime() {
     <>
       <Row style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <View style={{ flexShrink: 1 }}>
-          <Title>Story Time</Title>
+          <Row style={{ gap: Spacing.two }}>
+            <Title size={36}>Story Time</Title>
+            <Sticker shape="sparkle" tone="yellow" size={40} rotate={12} />
+          </Row>
           <Body muted>
             Pick who’s in tonight’s story from {childName}’s world. SCRBL drafts an illustrated book, and you can edit every page before you read it together.
           </Body>
@@ -113,18 +117,12 @@ function StoryTime() {
             {creations.map((c) => {
               const on = cast.includes(c.id);
               return (
-                <Pressable
-                  key={c.id}
-                  accessibilityRole="button"
-                  accessibilityLabel={c.name}
-                  accessibilityState={{ selected: on }}
-                  onPress={() => toggle(c.id)}
-                  style={[styles.castCard, { borderColor: on ? t.accent : 'transparent', backgroundColor: t.surface }]}>
+                <Card key={c.id} accessibilityLabel={c.name} selected={on} onPress={() => toggle(c.id)} style={styles.castCard}>
                   <ArtView art={c} style={{ borderRadius: 10, overflow: 'hidden' }} />
                   <Text style={[styles.castName, { color: t.text }]} numberOfLines={1}>
                     {c.name}
                   </Text>
-                </Pressable>
+                </Card>
               );
             })}
           </View>
@@ -137,7 +135,7 @@ function StoryTime() {
         <Title size={19}>2. What’s it about?</Title>
         <Row>
           {(Object.keys(THEMES) as StoryThemeId[]).map((k) => (
-            <Chip key={k} label={THEMES[k].label} selected={theme === k} onPress={() => setTheme(k)} />
+            <Chip key={k} tone="yellow" label={THEMES[k].label} selected={theme === k} onPress={() => setTheme(k)} />
           ))}
         </Row>
         <Text style={[styles.label, { color: t.text }]}>Add something from real life (optional)</Text>
@@ -148,7 +146,7 @@ function StoryTime() {
         <Title size={19}>3. Art style for this book</Title>
         <Row>
           {STYLES.filter((s) => !s.locked).map((s) => (
-            <Chip key={s.id} label={s.name} selected={style === s.id} onPress={() => setStyle(s.id)} />
+            <Chip key={s.id} tone="sky" label={s.name} selected={style === s.id} onPress={() => setStyle(s.id)} />
           ))}
         </Row>
       </Panel>
@@ -164,11 +162,11 @@ function StoryTime() {
 }
 
 const styles = StyleSheet.create({
-  label: { fontSize: 15, fontWeight: '800' },
+  label: { fontSize: 16, fontFamily: Fonts.label },
   cast: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.three },
-  castCard: { width: 130, padding: 6, gap: 4, borderRadius: Radius.medium, borderWidth: 3 },
-  castName: { fontSize: 14, fontWeight: '800' },
-  pages: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.four },
-  page: { width: 280, flexGrow: 1, maxWidth: 420, padding: 8, gap: Spacing.two, borderRadius: Radius.medium, borderWidth: 1 },
-  pageNumber: { fontWeight: '800' },
+  castCard: { width: 130 },
+  castName: { fontSize: 15, fontFamily: Fonts.label, paddingHorizontal: 4 },
+  pages: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.five },
+  page: { width: 280, flexGrow: 1, maxWidth: 420, padding: 10, gap: Spacing.two, borderRadius: 22 },
+  pageNumber: { fontFamily: Fonts.label },
 });

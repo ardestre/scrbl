@@ -3,8 +3,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 
 import { ArtView } from '@/components/art-view';
-import { Body, Button, Chip, Field, Row, Screen, Title } from '@/components/ui';
-import { Radius, Spacing } from '@/constants/theme';
+import { KIND_TONE } from '@/components/kind-icon';
+import { Body, Button, Chip, chunky, Field, Row, Screen, Title } from '@/components/ui';
+import { Fonts, Radius, Spacing } from '@/constants/theme';
 import { useIsWide, useTheme } from '@/hooks/use-theme';
 import { KINDS, styleName } from '@/world/catalog';
 import { ANSWER_LABELS } from '@/world/questions';
@@ -45,17 +46,17 @@ export default function CreationScreen() {
   return (
     <Screen>
       <Row style={{ justifyContent: 'space-between' }}>
-        <Title>{creation.name}</Title>
+        <Title size={34}>{creation.name}</Title>
         <Button kind="ghost" label="Close" onPress={() => router.back()} />
       </Row>
       <View style={{ flexDirection: wide ? 'row' : 'column', gap: Spacing.four }}>
         <View style={styles.figure}>
           <Text style={[styles.caption, { color: t.textSecondary }]}>MY DRAWING</Text>
-          <ArtView art={creation} mode="sketch" style={[styles.art, { borderColor: t.line }]} />
+          <ArtView art={creation} mode="sketch" style={[styles.art, chunky(t)]} />
         </View>
         <View style={styles.figure}>
           <Text style={[styles.caption, { color: t.textSecondary }]}>{styleName(creation.style).toUpperCase()} STYLE</Text>
-          <ArtView art={creation} style={[styles.art, { borderColor: t.line }]} />
+          <ArtView art={creation} style={[styles.art, chunky(t)]} />
         </View>
       </View>
       <View style={styles.facts}>
@@ -69,9 +70,9 @@ export default function CreationScreen() {
       <View style={{ gap: Spacing.three }}>
         <Title size={18}>Folder</Title>
         <Row>
-          <Chip label={`Just ${KINDS[creation.kind].plural}`} selected={creation.folderId === null} onPress={() => updateCreation(creation.id, { folderId: null })} />
+          <Chip tone={KIND_TONE[creation.kind]} label={`Just ${KINDS[creation.kind].plural}`} selected={creation.folderId === null} onPress={() => updateCreation(creation.id, { folderId: null })} />
           {folders.map((f) => (
-            <Chip key={f.id} label={f.name} selected={creation.folderId === f.id} onPress={() => updateCreation(creation.id, { folderId: f.id })} />
+            <Chip key={f.id} tone="mint" label={f.name} selected={creation.folderId === f.id} onPress={() => updateCreation(creation.id, { folderId: f.id })} />
           ))}
         </Row>
       </View>
@@ -108,10 +109,10 @@ export default function CreationScreen() {
 
 const styles = StyleSheet.create({
   figure: { flex: 1, gap: 6 },
-  caption: { fontSize: 12.5, fontWeight: '800', letterSpacing: 0.8 },
-  art: { borderRadius: Radius.medium, borderWidth: 1, overflow: 'hidden' },
+  caption: { fontSize: 13, fontFamily: Fonts.label, letterSpacing: 0.8 },
+  art: { borderRadius: Radius.large, overflow: 'hidden' },
   facts: { gap: Spacing.two },
   fact: { flexDirection: 'row', gap: Spacing.four },
-  factLabel: { width: 130, fontSize: 16, fontWeight: '700' },
+  factLabel: { width: 130, fontSize: 16, fontFamily: Fonts.label },
   factValue: { flex: 1, fontSize: 16, fontWeight: '600' },
 });

@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { Body, Title } from '@/components/ui';
-import { Radius, Spacing } from '@/constants/theme';
+import { Body, chunky, Title } from '@/components/ui';
+import { Fonts, Ink, Pop, Radius, Spacing, type PopName } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { checkPin, makePinRecord, PIN_LENGTH } from '@/world/pin';
 import { useWorld } from '@/world/store';
 
 const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0', 'del'];
+const KEY_TONES: PopName[] = ['pink', 'yellow', 'sky', 'lime', 'orange', 'purple', 'mint', 'lavender', 'pink'];
 
 /** Wrong tries allowed before the keypad pauses. */
 const MAX_TRIES = 5;
@@ -97,7 +98,7 @@ export function PinGate() {
       </Body>
       <View style={styles.dots} accessibilityLabel={`${digits.length} of ${PIN_LENGTH} numbers entered`}>
         {Array.from({ length: PIN_LENGTH }, (_, i) => (
-          <View key={i} style={[styles.dot, { borderColor: t.text, backgroundColor: i < digits.length ? t.text : 'transparent' }]} />
+          <View key={i} style={[styles.dot, { borderColor: t.ink, backgroundColor: i < digits.length ? Pop.purple : t.surfaceAlt }]} />
         ))}
       </View>
       <Text style={[styles.message, { color: t.berry }]} accessibilityLiveRegion="polite">
@@ -111,8 +112,8 @@ export function PinGate() {
               accessibilityRole="button"
               accessibilityLabel={key === 'del' ? 'Delete' : key}
               onPress={() => press(key)}
-              style={({ pressed }) => [styles.key, { backgroundColor: pressed ? t.accentSoft : t.surfaceAlt, borderColor: t.line }]}>
-              <Text style={[styles.keyText, { color: t.text }]}>{key === 'del' ? '⌫' : key}</Text>
+              style={({ pressed }) => [styles.key, chunky(t, { pressed, depth: 3 }), { backgroundColor: key === 'del' ? t.surfaceAlt : Pop[KEY_TONES[(Number(key) + 8) % 9]] }]}>
+              <Text style={[styles.keyText, { color: key === 'del' ? t.text : Ink }]}>{key === 'del' ? '⌫' : key}</Text>
             </Pressable>
           ) : (
             <View key={`gap${i}`} style={styles.key} />
@@ -126,9 +127,9 @@ export function PinGate() {
 const styles = StyleSheet.create({
   gate: { alignItems: 'center', gap: Spacing.four, paddingVertical: Spacing.six },
   dots: { flexDirection: 'row', gap: Spacing.four, marginTop: Spacing.two },
-  dot: { width: 18, height: 18, borderRadius: 9, borderWidth: 2 },
-  message: { minHeight: 22, fontSize: 15, fontWeight: '700' },
-  keypad: { width: 3 * 76 + 2 * 14, flexDirection: 'row', flexWrap: 'wrap', gap: 14 },
-  key: { width: 76, height: 64, borderRadius: Radius.medium, borderWidth: 0, alignItems: 'center', justifyContent: 'center' },
-  keyText: { fontSize: 26, fontWeight: '700' },
+  dot: { width: 22, height: 22, borderRadius: 11, borderWidth: 2.5 },
+  message: { minHeight: 22, fontSize: 16, fontFamily: Fonts.label },
+  keypad: { width: 3 * 76 + 2 * 16, flexDirection: 'row', flexWrap: 'wrap', gap: 16 },
+  key: { width: 76, height: 64, borderRadius: Radius.large, alignItems: 'center', justifyContent: 'center' },
+  keyText: { fontSize: 28, fontFamily: Fonts.display },
 });

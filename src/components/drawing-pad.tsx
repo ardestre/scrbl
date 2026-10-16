@@ -68,7 +68,7 @@ export function DrawingPad({ strokes, color, width, onStrokeEnd }: Props) {
       onResponderMove={move}
       onResponderRelease={end}
       onResponderTerminate={end}
-      style={[styles.pad, { borderColor: t.line }]}>
+      style={[styles.pad, { borderColor: t.ink, boxShadow: `5px 5px 0px ${t.ink}` }]}>
       <Svg width="100%" height="100%" viewBox={`0 0 ${PAPER_SIZE} ${PAPER_SIZE}`} pointerEvents="none" style={StyleSheet.absoluteFill}>
         <Rect x={0} y={0} width={PAPER_SIZE} height={PAPER_SIZE} fill={Paper} />
         {[...strokes, ...(current ? [current] : [])].map((s, i) => (
@@ -85,8 +85,7 @@ const styles = StyleSheet.create({
     maxWidth: 640,
     aspectRatio: 1,
     borderRadius: Radius.large,
-    borderWidth: 2,
-    borderStyle: 'dashed',
+    borderWidth: 3,
     overflow: 'hidden',
     backgroundColor: Paper,
   },

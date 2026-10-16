@@ -2,24 +2,25 @@ import { View } from 'react-native';
 import Svg, { Circle, Ellipse, Line, Path, Rect } from 'react-native-svg';
 
 import { ArtView } from '@/components/art-view';
+import { Ink, Pop } from '@/constants/theme';
 import { useWorld } from '@/world/store';
 import type { AvatarId, Profile } from '@/world/types';
 
-const INK = '#231F20';
+const INK = Ink;
 
-/** Tile colours come from the SCRBL palette (see Palette in constants/theme). */
+/** Tile colours are the bright Pop sticker colours from constants/theme. */
 export const AVATARS: { id: AvatarId; name: string; background: string }[] = [
-  { id: 'blob', name: 'Blob', background: '#7EBDC2' },
-  { id: 'dragon', name: 'Dragon', background: '#E2735F' },
-  { id: 'robot', name: 'Robot', background: '#F3DFA2' },
-  { id: 'cat', name: 'Cat', background: '#5E9EA3' },
-  { id: 'alien', name: 'Alien', background: '#BB4430' },
-  { id: 'bunny', name: 'Bunny', background: '#F4D3CB' },
-  { id: 'dino', name: 'Dino', background: '#A9D3D6' },
-  { id: 'owl', name: 'Owl', background: '#EFE6DD' },
+  { id: 'blob', name: 'Blob', background: Pop.sky },
+  { id: 'dragon', name: 'Dragon', background: Pop.pink },
+  { id: 'robot', name: 'Robot', background: Pop.yellow },
+  { id: 'cat', name: 'Cat', background: Pop.purple },
+  { id: 'alien', name: 'Alien', background: Pop.lime },
+  { id: 'bunny', name: 'Bunny', background: Pop.lavender },
+  { id: 'dino', name: 'Dino', background: Pop.orange },
+  { id: 'owl', name: 'Owl', background: Pop.mint },
 ];
 
-const background = (id: AvatarId) => AVATARS.find((a) => a.id === id)?.background ?? '#7EBDC2';
+const background = (id: AvatarId) => AVATARS.find((a) => a.id === id)?.background ?? Pop.sky;
 
 /** A profile's icon: one of the kid's own drawings if they picked one, otherwise a built-in character. */
 export function ProfileAvatar({ profile, size }: { profile: Profile; size: number }) {

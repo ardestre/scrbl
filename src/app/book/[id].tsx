@@ -3,7 +3,7 @@ import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 
 import { PageArt } from '@/components/page-art';
-import { Button, Row, Screen, Title } from '@/components/ui';
+import { Button, chunky, Row, Screen, Title } from '@/components/ui';
 import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useWorld } from '@/world/store';
@@ -36,7 +36,9 @@ export default function BookReader() {
         <Button kind="ghost" label="Close" onPress={() => router.back()} />
       </Row>
       <View style={{ maxWidth: readerWidth, width: '100%', alignSelf: 'center', gap: Spacing.four }}>
-        <PageArt book={book} page={page} creations={creations} />
+        <View style={[{ borderRadius: 20, overflow: 'hidden' }, chunky(t, { depth: 6 })]}>
+          <PageArt book={book} page={page} creations={creations} />
+        </View>
         <Text style={[styles.text, { color: t.text }]}>{page.text}</Text>
         <Row style={{ justifyContent: 'space-between' }}>
           <Button kind="ghost" label="Back" disabled={index === 0} onPress={() => setIndex(index - 1)} />
@@ -51,6 +53,6 @@ export default function BookReader() {
 }
 
 const styles = StyleSheet.create({
-  text: { fontFamily: Fonts.display, fontSize: 24, lineHeight: 33, fontWeight: '600', minHeight: 100 },
-  pageNumber: { fontWeight: '800', fontVariant: ['tabular-nums'] },
+  text: { fontFamily: Fonts.medium, fontSize: 26, lineHeight: 36, minHeight: 100 },
+  pageNumber: { fontFamily: Fonts.label, fontVariant: ['tabular-nums'] },
 });

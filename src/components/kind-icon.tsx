@@ -1,8 +1,12 @@
 import Svg, { Circle, Ellipse, Path } from 'react-native-svg';
 
+import { Ink, type PopName } from '@/constants/theme';
 import type { CreationKind } from '@/world/types';
 
-const INK = '#231F20';
+const INK = Ink;
+
+/** Each kind of creation has its own sticker colour, used on its tiles and folders. */
+export const KIND_TONE: Record<CreationKind, PopName> = { character: 'pink', place: 'sky', pet: 'lime', object: 'purple' };
 
 export function KindIcon({ kind, size = 64 }: { kind: CreationKind; size?: number }) {
   return (
