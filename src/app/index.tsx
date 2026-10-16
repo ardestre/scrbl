@@ -8,8 +8,8 @@ import { ProfileAvatar } from '@/components/avatar';
 import { Fonts, Palette, Radius, Spacing } from '@/constants/theme';
 import { useWorld } from '@/world/store';
 
-/** The "Who's drawing?" screen is always dark, like a theatre before the show. */
-const STAGE = { background: Palette.shadowGrey, text: Palette.linen, muted: '#B8ACA2', tile: '#2E2929', ring: Palette.vanillaCustard };
+/** The "Who's drawing?" screen is always Linen, in light and dark mode. */
+const STAGE = { background: Palette.linen, text: Palette.shadowGrey, muted: '#5E5550', tile: Palette.shadowGrey, ring: Palette.tomatoJam };
 
 export default function WhoIsDrawing() {
   const profiles = useWorld((s) => s.profiles);
@@ -34,11 +34,11 @@ export default function WhoIsDrawing() {
     <SafeAreaView style={[styles.stage, { backgroundColor: STAGE.background }]}>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.logo} accessibilityLabel="SCRBL">
-          <Text style={{ color: '#E2735F' }}>S</Text>
-          <Text style={{ color: Palette.vanillaCustard }}>C</Text>
-          <Text style={{ color: Palette.tropicalTeal }}>R</Text>
-          <Text style={{ color: Palette.linen }}>B</Text>
-          <Text style={{ color: '#E2735F' }}>L</Text>
+          <Text style={{ color: Palette.tomatoJam }}>S</Text>
+          <Text style={{ color: '#5E9EA3' }}>C</Text>
+          <Text style={{ color: Palette.shadowGrey }}>R</Text>
+          <Text style={{ color: '#5E9EA3' }}>B</Text>
+          <Text style={{ color: Palette.tomatoJam }}>L</Text>
         </Text>
         <Text accessibilityRole="header" style={styles.title}>
           {profiles.length ? 'Who’s drawing today?' : 'Welcome to SCRBL'}
@@ -63,8 +63,8 @@ export default function WhoIsDrawing() {
           <Tile label="Grown-ups" size={tile} onPress={openGrownUps} accessibilityLabel="Grown-ups profile, needs the PIN">
             <View style={[styles.iconTile, { width: tile, height: tile, borderRadius: tile * 0.16, backgroundColor: STAGE.tile }]}>
               <Svg width={tile * 0.42} height={tile * 0.42} viewBox="0 0 24 24" fill="none">
-                <Rect x={5} y={11} width={14} height={10} rx={2} stroke={STAGE.text} strokeWidth={2} />
-                <Path d="M8 11V8a4 4 0 0 1 8 0v3" stroke={STAGE.text} strokeWidth={2} strokeLinecap="round" />
+                <Rect x={5} y={11} width={14} height={10} rx={2} stroke={Palette.linen} strokeWidth={2} />
+                <Path d="M8 11V8a4 4 0 0 1 8 0v3" stroke={Palette.linen} strokeWidth={2} strokeLinecap="round" />
               </Svg>
             </View>
           </Tile>

@@ -28,7 +28,7 @@ export default function KidLayout() {
         headerShadowVisible: false,
         headerStyle: { backgroundColor: t.surface },
         headerLeft: () => <SwitchProfile />,
-        tabBarActiveTintColor: t.accent,
+        tabBarActiveTintColor: t.accentText,
         tabBarInactiveTintColor: t.textSecondary,
         tabBarStyle: { backgroundColor: t.surface, borderTopColor: t.line },
         tabBarLabelStyle: { fontWeight: '800', fontSize: 13 },

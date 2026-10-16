@@ -74,7 +74,7 @@ function ParentHome() {
                   {count(creations.filter((c) => c.childId === p.id).length, 'drawing')} ·{' '}
                   {count(books.filter((b) => b.childId === p.id).length, 'book')}
                 </Text>
-                <Text style={[styles.meta, { color: t.accent }]}>Edit</Text>
+                <Text style={[styles.meta, { color: t.accentText }]}>Edit</Text>
               </View>
             </Pressable>
           ))}

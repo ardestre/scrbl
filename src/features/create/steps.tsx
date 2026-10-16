@@ -103,7 +103,7 @@ function Bubble({ who, text }: { who: 'helper' | 'kid'; text: string }) {
   const kid = who === 'kid';
   return (
     <View style={{ alignSelf: kid ? 'flex-end' : 'flex-start', maxWidth: '85%', gap: 2 }}>
-      {!kid ? <Text style={[styles.helperName, { color: t.accent }]}>Pip</Text> : null}
+      {!kid ? <Text style={[styles.helperName, { color: t.accentText }]}>Pip</Text> : null}
       <View style={[styles.bubble, kid ? { backgroundColor: t.sun, borderBottomRightRadius: 6 } : { backgroundColor: t.accentSoft, borderBottomLeftRadius: 6 }]}>
         <Text style={[styles.bubbleText, { color: kid ? OnSun : t.text }]}>{text}</Text>
       </View>
